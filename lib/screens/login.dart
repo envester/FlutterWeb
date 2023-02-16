@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/constants.dart';
-import 'package:flutter_app/action_button.dart';
+import 'package:flutter_app/screens/constants.dart';
+import 'package:flutter_app/services/AuthService.dart';
 
 class LogIn extends StatefulWidget {
   final Function onSignUpSelected;
@@ -12,6 +12,21 @@ class LogIn extends StatefulWidget {
 }
 
 class _LogInState extends State<LogIn> {
+  final _authService = AuthService();
+
+  Future<void> _submitForm() async {
+    bool isLoggedIn = await _authService.login(
+        emailController.text.toString(), passwordController.text.toString());
+    if (isLoggedIn) {
+      print('You are successfully logged in');
+    } else {
+      print('The email address or password is incorrect');
+    }
+  }
+
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -67,33 +82,51 @@ class _LogInState extends State<LogIn> {
                       const SizedBox(
                         height: 32,
                       ),
-                      const TextField(
-                        decoration: InputDecoration(
-                          hintText: 'Email',
-                          labelText: 'Email',
-                          suffixIcon: Icon(
-                            Icons.mail_outline,
-                          ),
+                      Form(
+                        child: Column(
+                          children: [
+                            TextFormField(
+                              decoration: const InputDecoration(
+                                hintText: 'Email',
+                                labelText: 'Email',
+                                suffixIcon: Icon(
+                                  Icons.mail_outline,
+                                ),
+                              ),
+                              controller: emailController,
+                            ),
+                            const SizedBox(
+                              height: 32,
+                            ),
+                            TextFormField(
+                              decoration: const InputDecoration(
+                                hintText: 'Password',
+                                labelText: 'Password',
+                                suffixIcon: Icon(
+                                  Icons.lock_outline,
+                                ),
+                              ),
+                              controller: passwordController,
+
+                              //controller: passwordController,
+                            ),
+                            const SizedBox(
+                              height: 64,
+                            ),
+                            TextButton(
+                              style: ButtonStyle(
+                                foregroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        kPrimaryColor),
+                              ),
+                              onPressed: _submitForm,
+                              child: const Text('Log In'),
+                            ),
+                            const SizedBox(
+                              height: 32,
+                            ),
+                          ],
                         ),
-                      ),
-                      const SizedBox(
-                        height: 32,
-                      ),
-                      const TextField(
-                        decoration: InputDecoration(
-                          hintText: 'Password',
-                          labelText: 'Password',
-                          suffixIcon: Icon(
-                            Icons.lock_outline,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 64,
-                      ),
-                      actionButton("Log In"),
-                      const SizedBox(
-                        height: 32,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,

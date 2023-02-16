@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/constants.dart';
-import 'package:flutter_app/action_button.dart';
+import 'package:flutter_app/screens/constants.dart';
+import 'package:flutter_app/services/AuthService.dart';
 
 class SignUp extends StatefulWidget {
   final Function onLogInSelected;
@@ -12,9 +12,32 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  final AuthService _authService = AuthService();
+
+  final TextEditingController fullnameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  final rolesController = ["User"];
+
+  Future<void> _submitForm() async {
+    bool isSignedUp = await _authService.signUp(
+        fullnameController.text.toString(),
+        emailController.text.toString(),
+        passwordController.text.toString(),
+        rolesController);
+    if (isSignedUp) {
+      print('You are successfully signed up');
+    } else {
+      print('Error');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    Size size = MediaQuery.of(
+      context,
+    ).size;
 
     return Padding(
       padding: EdgeInsets.all(size.height > 770
@@ -67,45 +90,62 @@ class _SignUpState extends State<SignUp> {
                       const SizedBox(
                         height: 32,
                       ),
-                      const TextField(
-                        decoration: InputDecoration(
-                          hintText: 'Name',
-                          labelText: 'Name',
-                          suffixIcon: Icon(
-                            Icons.person_outline,
-                          ),
+                      Form(
+                        child: Column(
+                          children: [
+                            TextFormField(
+                              decoration: const InputDecoration(
+                                hintText: 'Name',
+                                labelText: 'Name',
+                                suffixIcon: Icon(
+                                  Icons.person_outline,
+                                ),
+                              ),
+                              controller: fullnameController,
+                            ),
+                            const SizedBox(
+                              height: 32,
+                            ),
+                            TextFormField(
+                              decoration: const InputDecoration(
+                                hintText: 'Email',
+                                labelText: 'Email',
+                                suffixIcon: Icon(
+                                  Icons.mail_outline,
+                                ),
+                              ),
+                              controller: emailController,
+                            ),
+                            const SizedBox(
+                              height: 32,
+                            ),
+                            TextFormField(
+                              decoration: const InputDecoration(
+                                hintText: 'Password',
+                                labelText: 'Password',
+                                suffixIcon: Icon(
+                                  Icons.lock_outline,
+                                ),
+                              ),
+                              controller: passwordController,
+                            ),
+                            const SizedBox(
+                              height: 64,
+                            ),
+                            TextButton(
+                              style: ButtonStyle(
+                                foregroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        kPrimaryColor),
+                              ),
+                              onPressed: _submitForm,
+                              child: const Text('Sign Up'),
+                            ),
+                            const SizedBox(
+                              height: 32,
+                            ),
+                          ],
                         ),
-                      ),
-                      const SizedBox(
-                        height: 32,
-                      ),
-                      const TextField(
-                        decoration: InputDecoration(
-                          hintText: 'Email',
-                          labelText: 'Email',
-                          suffixIcon: Icon(
-                            Icons.mail_outline,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 32,
-                      ),
-                      const TextField(
-                        decoration: InputDecoration(
-                          hintText: 'Password',
-                          labelText: 'Password',
-                          suffixIcon: Icon(
-                            Icons.lock_outline,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 64,
-                      ),
-                      actionButton("Create Account"),
-                      const SizedBox(
-                        height: 32,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
