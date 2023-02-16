@@ -18,7 +18,7 @@ class AuthService {
     try {
       final user = User(
           fullName: fullName, email: email, password: password, roles: roles);
-      const url = 'https://localhost:7138/api/Account/register';
+      const url = 'https://localhost:44323/api/Account/register';
       final response = await http.post(
         Uri.parse(url),
         body: json.encode(user.toJson()),
@@ -40,7 +40,7 @@ class AuthService {
   Future<bool> login(String email, String password) async {
     try {
       final user = User(email: email, password: password);
-      const url = 'https://localhost:7138/api/Account/login';
+      const url = 'https://localhost:44323/api/Account/login';
 
       final response = await http.post(
         Uri.parse(url),
